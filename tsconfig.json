@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": "src/",
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "target": "es2019",
+    "pretty": true,
+    "sourceMap": true,
+    // jest recommends: https://devblogs.microsoft.com/typescript/announcing-typescript-2-7/#easier-ecmascript-module-interoperability
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*", "test/**/*"],
+  "baseUrl": "src"
+}

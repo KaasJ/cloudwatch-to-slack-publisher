@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Cloudwatch Alert Publisher
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - acc
+      - prod
+    Default: acc
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: nodejs12.x
+
+Resources:
+  CloudwatchSlackPublisher:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist/cloudwatch-slack-publisher
+      Timeout: 900
+      Environment:
+        Variables:
+          SLACK_WEBHOOK: 'resolve://ssm/global/slack.incoming.webhook.url'
+          ENVIRONMENT: !Ref Environment
+      ReservedConcurrentExecutions: 1
+      Events:
+        PeriodicSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 * * * ? *) #every hour
+            # Edit the lambda input to match your configuration
+            Input: >
+              '{ 
+                "logGroupNamePrefix": "/aws/lambda/yourLogGroupNamePrefix",
+                "lagInMinutes": 60,
+                "queryString": "fields @timestamp, @message | sort @message | filter @message like /Invoke Error|timed out|Main exception/",
+                "queryResultLimit": 100,
+                "maxLogGroups": 50,
+                "channel": "#monitoring"
+              }'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: global/slack.incoming.webhook.url
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 
+                - logs:DescribeLogGroups
+                - logs:StartQuery
+                - logs:GetQueryResults
+                - logs:GetLogRecord
+              Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"

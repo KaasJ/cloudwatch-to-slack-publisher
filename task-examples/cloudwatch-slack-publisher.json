@@ -1,0 +1,8 @@
+{
+  "logGroupNamePrefix": "/aws/lambda/monitoring-platform",
+  "lagInMinutes": 600,
+  "queryString": "fields @timestamp, @message | sort @message | filter @message like /Invoke Error|timed out|Main exception/",
+  "queryResultLimit": 100,
+  "maxLogGroups": 50,
+  "channel": "#monitoring-test"
+}

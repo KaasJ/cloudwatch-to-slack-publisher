@@ -1,0 +1,50 @@
+definitions:
+  steps:
+      - step: &npm-build
+          name: generate all js files
+          image: node:14
+          script:
+            - npm set //registry.npmjs.org/:_authToken $NPM_TOKEN
+            - npm ci
+            - npm run webpack -- --mode production
+          services:
+            - docker
+          artifacts:
+            - dist/**
+            - cloudformation-stacks/**
+      - parallel: &stacks-package
+        - step:
+            name: 'Packaging cloudwatch-slack-publisher'
+            image: atlassian/pipelines-awscli
+            script:
+              - export AWS_ACCESS_KEY_ID=$STAG_AWS_ACCESS_KEY_ID
+              - export AWS_SECRET_ACCESS_KEY=$STAG_AWS_SECRET_ACCESS_KEY
+              - ./bin/stack-package.sh cloudwatch-slack-publisher
+            artifacts:
+              - dist/cloudwatch-slack-publisher.yml
+
+pipelines:
+  branches:
+    master:
+      - step: *npm-build
+      - parallel: *stacks-package  
+      - step:
+          name: 'Deploying cloudwatch-slack-publisher'
+          image: atlassian/pipelines-awscli
+          script:
+            - export AWS_ACCESS_KEY_ID=$STAG_AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$STAG_AWS_SECRET_ACCESS_KEY
+            - ./bin/stack-deploy.sh cloudwatch-slack-publisher acc
+  
+
+    release:
+      - step: *npm-build
+      - parallel:  *stacks-package
+      - step:
+          name: 'Deploying cloudwatch-slack-publisher'
+          image: atlassian/pipelines-awscli
+          script:
+            - export AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY
+            - ./bin/stack-deploy.sh cloudwatch-slack-publisher prod
+  
