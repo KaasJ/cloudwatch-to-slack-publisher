@@ -14,7 +14,7 @@ You will need [SAM-CLI](https://github.com/awslabs/aws-sam-cli) to run this api.
 - Invoke the lambda using `npm run cloudwatch-slack-publisher`. You can edit the lambda input `cloudwatch-slack-publisher` in task-examples folder. 
 
 
-# Configuration
+## Configuration
   You configure the api in the `cloudwatch-alert-publisher.yml` file in the `cloudformation` folder. Here you can set the input variable or change the schedule of the cron job. Please find an example input below.
 
 
