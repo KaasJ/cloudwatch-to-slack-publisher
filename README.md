@@ -11,7 +11,7 @@ You will need [SAM-CLI](https://github.com/awslabs/aws-sam-cli) to run this api.
 
 - Run `npm run dev` to install dependencies
 - Run `npm run watch`
-- Invoke the lambda using `npm run cloudwatch-slack-publisher`. You can edit the lambda input `cloudwatch-slack-publisher` in task-examples folder. 
+- Invoke the lambda using `npm run cloudwatch-slack-publisher`. You can edit the lambda input in the `cloudwatch-slack-publisher.json` file in the task-examples folder. 
 
 
 ## Configuration
