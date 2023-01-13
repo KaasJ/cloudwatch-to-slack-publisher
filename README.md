@@ -4,7 +4,7 @@ An api that filters AWS Cloudwatch logs and publishes results to Slack. The api 
 
 The goal of this api is to simplify monitoring of a large backend system with (serverless) microservice architecture setup in AWS.
 
-- Please note that this is an example project and a stripped down version of the original API -
+**Please note that this is an _example_ project and a stripped down version of the original API**
 
 ## Local development
 You will need [SAM-CLI](https://github.com/awslabs/aws-sam-cli) to run this api.
@@ -28,6 +28,7 @@ You will need [SAM-CLI](https://github.com/awslabs/aws-sam-cli) to run this api.
   "channel": "#monitoring"
 }
 ```
+
 ## Deployments
 Deployments are handled by Bitbucket Pipelines (config in `bitbucket-pipelines.yml`) and make use of SAM, a layer on top of Cloudformation created by AWS.
 
