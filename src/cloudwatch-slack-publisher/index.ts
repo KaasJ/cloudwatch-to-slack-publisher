@@ -97,7 +97,6 @@ const cloudwatchSlackPublisher = async (event: CloudwatchSlackPublisherEvent, co
     return 'OK'
     
   } catch (e) {
-    console.log('test', channel, url)
     await sendToSlack(getBlocks(), channel, url)
     throw new Error(`Cloudwatch slack publisher failed: ${e}`)
   }
